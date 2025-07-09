@@ -1,0 +1,147 @@
+.c-section--blogs {
+	padding: 1em 0 0;
+
+	ul {
+		list-style: none;
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5em;
+		align-items: center;
+	}
+
+	li {
+		display: flex;
+		width: calc(33.33% - 1em);
+		flex-direction: column;
+		border: 1px solid var(--color-dark-20);
+		border-radius: $border-radius;
+		gap: 0.75em;
+		padding: 16px;
+		@include mq($from: sm, $until: desktop) {
+			width: calc(50% - .75em);
+		}
+		@include mq($until: sm) {
+			width: 100%;
+		}
+
+		a {
+			@include font-size(15px, 1.6);
+		}
+
+
+		p {
+			@include font-size(13px, 1.6);
+			margin: 0.75em 0 0;
+			text-align: justify;
+		}
+
+		img {
+			width: auto;
+			height: 100%;
+			min-width: 100%;
+			object-fit: cover;
+
+		}
+
+	}
+
+	.c-blog {
+		&__img {
+			display: flex;
+			border-radius: $border-radius;
+			overflow: hidden;
+			position: relative;
+
+			img {
+				transition: transform .2s linear;
+			}
+
+			&:hover {
+				img {
+					transform: scale(1.05);
+				}
+
+				.c-product__item-title {
+					bottom: 3em;
+					color: var(--color-white);
+					@include mq($until: md) {
+						bottom: 4em;
+					}
+				}
+
+				.c-product__item-more {
+					bottom: 1em;
+					opacity: 1;
+				}
+			}
+		}
+
+		&__info {
+			padding: 0 0.5em;
+
+			a {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 1;
+				overflow: hidden;
+				height: 32px;
+				color: var(--color-dark);
+				transition: color .2s linear;
+				@include font-size(18px,1.6);
+				&:hover{
+					color: var(--color-primary);
+				}
+			}
+
+			p {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 3;
+				overflow: hidden;
+				height: 70px;
+				margin: 0;
+				@include font-size(14px,1.6);
+			}
+		}
+
+		&__meta {
+			display: flex;
+			@include font-size(13px, 1.6);
+			font-weight: 300;
+			justify-content: space-between;
+			padding: 0 .5em;
+
+			svg {
+				height: 16px;
+				vertical-align: middle;
+
+				path {
+					stroke: var(--color-text);
+				}
+			}
+		}
+	}
+}
+
+.pagination {
+	display: flex;
+	gap: .75em;
+	justify-content: center;
+	align-items: center;
+	margin: 2em 0 1em;
+	@include font-size(14px, 1);
+
+	a {
+		color: var(--color-text);
+		padding-top: 3px;
+	}
+
+	span {
+		color: var(--color-primary);
+		font-weight: 700;
+		background: var(--color-primary-20);
+		padding: 3px 7px;
+		border-radius: $border-radius;
+	}
+}

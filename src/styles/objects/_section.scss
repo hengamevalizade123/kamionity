@@ -1,0 +1,102 @@
+.o-section {
+	padding: 1.5em 0;
+
+	@include mq(desktop) {
+		padding: 24px 0;
+	}
+}
+
+.o-section__wrapper {
+	max-width: 100%;
+	margin: 0 auto;
+	padding: 0 1em;
+
+	@include mq(lg) {
+		max-width: calc(1264px - 2em);
+	}
+}
+
+.c-section__title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.275em;
+
+	.c-section__col {
+		display: flex;
+		align-items: center;
+
+		svg {
+			margin-left: .5em;
+			width: 24px;
+			height: 24px;
+
+			path {
+				stroke: var(--color-secondary);
+			}
+		}
+
+		span {
+			color: var(--color-dark);
+			@include font-size(18px, 1.8);
+			font-weight: 700;
+			margin: 0;
+		}
+
+		h1 {
+			color: var(--color-dark);
+			font-weight: 700;
+			margin: 0;
+			@include font-size(18px, 1.5)
+		}
+	}
+
+	.c-section__cta {
+		background: var(--color-grey);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: $border-radius;
+		width: 32px;
+		height: 24px;
+		position: relative;
+
+		svg {
+			width: 16px;
+			height: 16px;
+
+			path {
+				stroke: var(--color-dark-80);
+			}
+		}
+
+		span {
+			position: absolute;
+			right: -3em;
+			@include font-size(13px, 1);
+			color: var(--color-text);
+			top: 6px;
+			transition: opacity 0.2s linear;
+
+			&:before {
+				content: "بیشتر";
+			}
+
+			@include mq(md) {
+				&:before {
+					content: "مشاهده همه";
+				}
+				right: -6em;
+			}
+		}
+
+		&:hover span {
+			opacity: 0.7;
+		}
+	}
+}
+
+.c-section__title.box-title {
+	border-bottom: 1px solid #e9edf3;
+	padding: 0 0 1em;
+}

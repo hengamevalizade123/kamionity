@@ -1,0 +1,42 @@
+.c-blog-list{
+	ul{
+		display: flex;
+		gap: 1em;
+		padding: 0;
+li{
+	flex-direction: column;
+	width: calc(25% - 0.75em);
+	list-style: none;
+	a{
+		display: flex;
+		width: 100%;
+		max-width: 100%;
+		border-radius: 0.5rem;
+		overflow: hidden;
+		flex-direction: column;
+		text-decoration: none;
+
+		img{
+			height: 12em;
+			object-fit: cover;
+			width: 100%;
+			transition: transform .3s ease;
+		}
+		&:hover{
+img{
+	transform: scale(1.05);
+}
+		}
+		h3{
+			@include font-size(16px,1);
+			color: var(--color-text-black);
+		}
+	}
+	p{
+		margin: 0;
+		@include font-size(14px,1.6);
+		color: var(--color-text);
+	}
+}
+	}
+}

@@ -1,0 +1,156 @@
+.c-section--footer-landing {
+	background: var(--color-primary-landing);
+	padding: 24px 0;
+}
+
+.c-landing-footer {
+	display: flex;
+	justify-content: space-between;
+	@include mq($until: md) {
+		flex-direction: column;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__desc {
+		width: 53%;
+		display: flex;
+		gap: 8px;
+		flex-direction: column;
+		align-items: flex-start;
+		@include mq($until: md) {
+			order: 2;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+			align-items: center;
+		}
+	}
+
+	&__title {
+		color: #E6E7EC;
+		@include font-size(16px, 1.4);
+		font-weight: 700;
+		display: flex;
+		gap: 32px;
+		@include mq($until: md) {
+			flex-direction: column;
+			align-items: center;
+			gap: 18px;
+		}
+	}
+
+	&__title-call {
+		display: flex;
+		gap: 15px;
+		align-items: center;
+		line-height: 28px;
+	}
+
+	&__description {
+		color: var(--Primary-100, #B0B6C4);
+		@include font-size(12px, 20px);
+		margin-top: 4px;
+		@include mq($until: md) {
+			margin-top: 0;
+		}
+	}
+
+	&__menu-item {
+		a {
+			color: #546180;
+			@include font-size(12px, 24px);
+			font-weight: 700;
+
+			&:hover {
+				color: #E6E7EC;
+			}
+
+			@include mq($until: md) {
+				color: #E6E7EC;
+			}
+		}
+	}
+
+	&__access-menu {
+		display: inline-flex;
+		align-items: center;
+		gap: 32px;
+		list-style: none;
+		@include mq($until: md) {
+			gap: 24px;
+		}
+	}
+
+	&__access {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 8px;
+		@include mq($until: md) {
+			order: 1;
+			img.footer-logo {
+				display: none;
+			}
+			.footer-logo-mobile {
+				display: block;
+			}
+		}
+	}
+
+	img {
+		width: auto;
+		height: 42px;
+	}
+
+	.footer-enamad-mobile {
+		display: none;
+		@include mq($until: md) {
+			order: 3;
+			width: 103.553px;
+			height: 40px;
+			margin: 0;
+			display: flex;
+			margin-right: auto;
+			justify-content: flex-end;
+			height: 90px;
+			img {
+				cursor: pointer;
+				height: 100%;
+			}
+		}
+	}
+
+	.enamad {
+		margin: 0;
+		display: flex;
+		@include mq($until: md) {
+			display: none;
+		}
+
+		img {
+			cursor: pointer;
+			height: 100%;
+			max-height: 110px;
+		}
+	}
+}
+
+.landing-call-btn {
+	display: none;
+	@include mq($until: md) {
+		border: 1px solid var(--color-primary-landing-50);
+		color: var(--color-primary-landing);
+		background: var(--color-white);
+		position: fixed;
+		bottom: 24px;
+		left: 16px;
+		display: inline-flex;
+		padding: 10px;
+		justify-content: center;
+		align-items: center;
+		z-index: 100
+	}
+}

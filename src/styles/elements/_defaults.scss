@@ -1,0 +1,128 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	scroll-margin-top: 55px;
+}
+
+::selection {
+	background: var(--color-primary);
+	color: var(--color-white);
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-primary);
+}
+
+body,
+html {
+	font-family: $ravi;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	scroll-behavior: smooth;
+	overflow-x: clip;
+}
+
+body {
+	color: var(--color-text);
+	background: var(--color-bg);
+	//padding-top: 83px;
+}
+
+img {
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
+	user-drag: none;
+	user-select: none;
+	max-width: 100%;
+}
+
+video {
+	border-radius: 4px;
+	max-width: 100%;
+	height: auto;
+
+	&[poster] {
+		height: auto;
+		width: 100%;
+		object-fit: cover;
+	}
+}
+
+.ltr {
+	direction: ltr;
+}
+
+a {
+	text-decoration: none;
+}
+
+.i-fill path {
+	fill: var(--color-primary);
+	stroke: none !important;
+}
+
+.i-stroke path {
+	fill: none !important;
+	stroke: var(--color-primary) !important;
+}
+
+h1 {
+	@include font-size(20px, 1.8);
+}
+
+h2 {
+	@include font-size(18px, 1.8);
+}
+
+h3 {
+	@include font-size(16px, 1.8);
+}
+
+h4 {
+	@include font-size(15px, 1.8);
+	color: var(--color-dark);
+	margin: 0 0 .5em;
+	font-weight: 700;
+}
+
+.sm-title {
+	@include font-size(16px, 1);
+	margin: 0;
+}
+
+.c-btn-primary {
+	display: flex;
+	height: 48px;
+	padding: 10px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-radius: $border-radius-landing;
+	background: var(--color-primary-landing);
+	color: var(--color-white);
+	@include font-size(14px, 1.4);
+	font-weight: 700;
+	border: none;
+	cursor: pointer;
+}
+.carousel{
+	display: none;
+	&.flickity-enabled {
+		display: block;
+	}
+}
+.border-radius{
+	border-radius: $border-radius;
+}

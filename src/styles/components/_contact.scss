@@ -1,0 +1,106 @@
+.c-contact {
+	display: flex;
+	text-align: justify;
+	@include mq($until: md) {
+		flex-direction: column;
+		.c-form__row {
+			flex-direction: column;
+		}
+	}
+
+	p {
+		@include font-size(15px, 1.8);
+		@include mq($until: md) {
+			flex-direction: column;
+		}
+
+		a {
+			color: var(--color-text);
+			transition: color .2s linear;
+
+			&:hover {
+				color: var(--color-primary);
+			}
+		}
+
+		svg {
+			path {
+				stroke: var(--color-primary);
+			}
+		}
+	}
+
+	&__info, &__form {
+		border: 1px solid var(--color-dark-20);
+		border-radius: $border-radius;
+		padding: 16px;
+		width: 50%;
+		@include mq($until: md) {
+			width: 100%;
+		}
+	}
+
+	input[type=submit] {
+		position: relative;
+		@include font-size(16px, 1);
+		line-height: 1.8;
+		font-weight: 400;
+		padding: .425em 1em .225em 1em;
+		border-radius: 5rem;
+		background: var(--color-primary);
+		color: var(--color-white);
+		display: flex;
+		gap: .625em;
+		align-items: center;
+		text-align: center;
+		justify-content: center;
+		white-space: nowrap;
+	}
+
+	.wpcf7-spinner {
+		display: none;
+	}
+
+	.c-form {
+
+		textarea {
+			height: 9em;
+			flex: auto;
+		}
+	}
+
+	input, select {
+
+		flex: 1;
+		border: 1px solid #e5e8f0;
+		border-radius: .5rem;
+		padding: 1em;
+		height: 52px;
+		@include font-size(14px, 1.8);
+		width: 100%;
+		color: var(--color-text);
+		text-align: right;
+	}
+
+	textarea {
+		flex: 1;
+		border: 1px solid #e5e8f0;
+		border-radius: .5rem;
+		padding: 1em;
+		height: 15em;
+		@include font-size(14px, 1.8);
+		color: var(--color-text);
+		width: 100%;
+		resize: none;
+		margin-top: 16px;
+	}
+}
+
+#submit-order {
+	background: var(--color-primary);
+	color: var(--color-white);
+	border: none;
+	padding: 12px 16px;
+	border-radius: $border-radius-pill;
+	float: left;
+}

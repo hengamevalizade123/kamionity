@@ -1,0 +1,13 @@
+.not-found {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5em;
+	margin: 3.25em 0;
+	img{
+		max-height: 25em;
+		@include mq($until:md){
+			max-height: 19em;
+		}
+	}
+}

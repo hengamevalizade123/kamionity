@@ -1,0 +1,10 @@
+.c-home-about {
+	gap: 24px;
+	&__img {
+		img {
+			height: 250px;
+			width: 100%;
+			object-fit: cover;
+		}
+	}
+}
