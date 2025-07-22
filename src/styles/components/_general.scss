@@ -21,6 +21,9 @@
 	gap: 16px;
 }
 //spacing
+.padding-md{
+	padding: 16px;
+}
 .p-0{
 	padding: 0;
 }
@@ -30,6 +33,22 @@
 .m-0{
 	margin: 0;
 }
+.m-t-sm{
+	margin-top: 8px;
+}
+.m-t-md{
+	margin-top: 16px;
+}
+.m-b-md{
+	margin-bottom: 16px;
+}
+.m-t-lg{
+	margin-top: 32px;
+}
+.bg-white{
+	background: var(--color-white);
+}
+
 .direction-column{
 	flex-direction: column;
 }
@@ -48,10 +67,4 @@
 }
 .color-dark{
 	color: var(--color-dark);
-}
-.m-t-sm{
-	margin-top: 8px;
-}
-.bg-white{
-	background: var(--color-white);
 }

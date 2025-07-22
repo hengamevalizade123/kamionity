@@ -54,22 +54,23 @@
 								<a href="/">صفحه اصلی</a>
 
 							</li>
-							<li>
-								<a class="has-sub-menu gap-sm d-flex item-center"  href="/">
-									اتاق کامیونت
-								</a>
-								<ul class="u-flex u-flex--column">
-									<li><a class="sub-menu"
-											href="https://wpgostar.com/kian/product-category/communication/">ارتباطی</a>
-									</li>
-									<li><a class="sub-menu"
-										   href="https://wpgostar.com/kian/product-category/electronic/">الکترونیکی</a>
-									</li>
-									<li><a class="sub-menu"
-										   href="https://wpgostar.com/kian/product-category/mechanical/">مکانیکی</a>
-									</li>
-								</ul>
+							<li class="has-sub-menu has-sub-menu-first d-flex gap-sm item-center">
+								<a class="mega-menu" href="#">دسته‌بندی</a>
+								<div class="sub-child">
+									<div class="sub-child-content">
+										<ul class="sub-menu lvl-0">
+											<?php
+											wp_list_categories(array(
+												'taxonomy'     => 'car',
+												'title_li'     => '',
+												'hide_empty'   => true, // فقط دسته‌هایی که محصول دارن
+												'walker'       => new Custom_Walker_Category_Menu(),
+											));
+											?>
+										</ul>
 
+									</div>
+								</div>
 							</li>
 							<li>
 								<a href="https://shahrpanel.com/wall-sandwich-panel/">ساندویچ پانل دیواری</a>

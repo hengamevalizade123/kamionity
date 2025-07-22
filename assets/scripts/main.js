@@ -216,354 +216,108 @@
 })();
 
 jQuery(document).ready(function ($) {
-  // shop now
-  // input plus and minize
-  $(document).on('input', '.qty-input', function () {
-    var val = parseInt($(this).val());
+  var isMobile = function isMobile() {
+    return window.innerWidth <= 768;
+  };
 
-    if (isNaN(val) || val < 1) {
-      $(this).val(1);
+  var hideTimer;
+
+  function activateFirstChain($li) {
+    var current = $li;
+
+    while (true) {
+      var $ulToShow = current.find('ul').first();
+      if ($ulToShow.length === 0) break; // $ulToShow.addClass('open');
+
+      current = $ulToShow.children('li').first();
     }
+  }
 
-    if ($('.meterage-value').length > 0) {
-      billAmount($(this));
-    }
-  });
-  $('.plus').click(function () {
-    var $box = $(this).closest('.quantity-box');
-    var $input = $box.find('.qty-input');
-    var $minusBtn = $box.find('.minus');
-    var val = parseInt($input.val()) + 1;
-    $input.val(val);
-    $('.meterage-popup').val(val);
+  function deactivateAll() {
+    $('.has-sub-menu ul').removeClass('open');
+  }
 
-    if ($('.finalPrice').length > 0) {
-      $('.finalPrice').html(Number(val * $('#pr-price').val()).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-    }
+  if (!isMobile()) {
+    $('.mega-menu').on('mouseenter', function () {
+      $('.c-menu').addClass('open');
+      var $subContent = $(this).siblings('.sub-child').find('.sub-child-content');
+      var currentUL = $subContent.find('ul').first(); // شروع از اولین UL
 
-    billAmount($(this));
+      $subContent.find('ul').removeClass('show');
+      console.log("$(this).closest('.sub-child')");
+      console.log($(this).siblings('.sub-child'));
 
-    if (val > 1) {
-      $minusBtn.html('-');
-    }
-  });
-  $('.minus').click(function () {
-    var $box = $(this).closest('.quantity-box');
-    var $input = $box.find('.qty-input');
-    var $minusBtn = $box.find('.minus');
-    var val = parseInt($input.val());
-    val--;
-    $('.meterage-popup').val(val);
+      while (currentUL.length) {
+        currentUL.addClass('show'); // پیدا کردن اولین LI که داخل این UL هست
 
-    if ($('.finalPrice').length > 0) {
-      $('.finalPrice').html(Number(val * $('#pr-price').val()).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-    }
+        var firstLI = currentUL.children('li').first(); // رفتن به UL بعدی داخل این LI
 
-    $('.meterage-popup').val(val);
-
-    if (val > 1) {
-      $input.val(val);
-      $minusBtn.html('-');
-      billAmount($(this));
-    } else if (val == 1) {
-      $input.val(1);
-      billAmount($(this));
-      $minusBtn.html("\n\t\t\t<svg width=\"20\" height=\"21\" viewBox=\"0 0 20 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n\t\t\t\t<path d=\"M17.5 5.48335C14.725 5.20835 11.9333 5.06668 9.15 5.06668C7.5 5.06668 5.85 5.15001 4.2 5.31668L2.5 5.48335\" stroke=\"#D70609\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n\t\t\t\t<path d=\"M7.0835 4.64166L7.26683 3.54999C7.40016 2.75832 7.50016 2.16666 8.9085 2.16666H11.0918C12.5002 2.16666 12.6085 2.79166 12.7335 3.55832L12.9168 4.64166\" stroke=\"#D70609\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n\t\t\t\t<path d=\"M15.7082 8.11667L15.1665 16.5083C15.0748 17.8167 14.9998 18.8333 12.6748 18.8333H7.32484C4.99984 18.8333 4.92484 17.8167 4.83317 16.5083L4.2915 8.11667\" stroke=\"#D70609\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n\t\t\t\t<path d=\"M8.6084 14.25H11.3834\" stroke=\"#D70609\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n\t\t\t\t<path d=\"M7.9165 10.9167H12.0832\" stroke=\"#D70609\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n\t\t\t</svg>\n\t\t");
-    } else {
-      // delete order in cart
-      var $productLi = $(this).closest('li');
-      var productId = $productLi.data('product-id');
-      var cart = getCookie('shoppingCart');
-      cart = cart.filter(function (item) {
-        return String(item.id) !== String(productId);
-      });
-      setCookie('shoppingCart', cart, 7);
-      updateTotal(cart, true);
-      $('.count-order').text(cart.length);
-      $(this).closest('li').fadeOut(350, function () {
-        $(this).remove();
-      });
-    }
-  });
-  $('input[name="thickness"]').change(function () {
-    // alert($(this).val());
-    $('#pr-price').val($(this).val());
-    $('#product-id').val($(this).data('id'));
-    $('#unit-price').html(Number($(this).val()).toLocaleString() + ' <svg class="toman"><use href="#toman"/></svg> ');
-    finalPrice();
-  });
-  $('#checkout-form').submit(function (e) {
-    e.preventDefault();
-    $('.close-btn').click(function () {
-      $('#submited-success').fadeOut();
-    });
-    var isValid = true;
-    var $inputs = $('#checkout-form input.required');
-    $inputs.each(function () {
-      var value = $(this).val();
-
-      if (value == '') {
-        $(this).closest('label').addClass('is-error');
-        isValid = false;
-      } else {
-        $(this).closest('label').removeClass('is-error');
+        currentUL = firstLI.children('ul').first();
       }
     });
+    $('.sub-child .has-sub-menu').on('mouseenter', function () {
+      $(this).find('ul').first().addClass('show');
+    }).on('mouseleave', function () {
+      $(this).find('ul').first().removeClass('show');
+    });
+    $('.c-header').on('mouseleave', function () {
+      console.log("gdfjbngdf;iujhfdgiuhdf");
+      setTimeout(function () {
+        $('.c-menu').removeClass('open');
+        $('ul').removeClass('show');
+      }, 200);
+    });
+  }
 
-    if (!isValid) {
-      return;
-    }
+  $(window).on('resize', function () {
+    deactivateAll();
+  });
 
-    $('#order-form').fadeOut();
-    $('#submited-success').fadeIn();
-    var trackingCode = document.getElementById('trackingCode').value;
-    var userInfo = {
-      full_name: $('input[name="user_info[full_name]"]').val(),
-      phone_number: $('input[name="user_info[phone_number]"]').val(),
-      email: $('input[name="user_info[email]"]').val(),
-      city: $('input[name="user_info[city]"]').val(),
-      province: $('input[name="user_info[province]"]').val(),
-      postal_address: $('input[name="user_info[postal_address]"]').val()
+  if (isMobile()) {
+    var showMobileSubmenu = function showMobileSubmenu(id) {
+      $('.mobile-submenu').removeClass('active');
+      $(".mobile-submenu[data-mobile-id=\"".concat(id, "\"]")).addClass('active');
+      historyStack.push(id);
     };
-    $.ajax({
-      url: ajaxObject.ajaxurl,
-      method: "POST",
-      data: {
-        action: "handle_custom_checkout_form",
-        submit_request: true,
-        trackingCode: trackingCode,
-        user_info: userInfo
-      },
-      success: function success(response) {
-        $('#tracking-code').text('کد رهگیری : ' + trackingCode);
-        document.cookie = "shoppingCart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "cartTotal = getCookie('cartTotal');\n=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        setTimeout(function () {
-          window.location.href = '/';
-        }, 4000);
 
-        if (response) {}
-      },
-      error: function error() {
-        $('body').html('<ul><li>مشکلی پیش آمد. دوباره تلاش کنید.</li></ul>');
+    var historyStack = []; // همه ul‌های با کلاس show رو جدا کن و بذار تو بدنه به‌صورت صفحات
+
+    $('ul.sub-menu, ul.product-list').each(function (i) {
+      var $clone = $(this).clone();
+      var $wrapper = $('<div class="mobile-submenu"></div>');
+      var $backBtn = $('<div class="back-button">بازگشت</div>');
+      $wrapper.append($backBtn).append($clone);
+      $('body').append($wrapper);
+      $(this).data('mobile-id', i);
+      $wrapper.attr('data-mobile-id', i);
+    }); // وقتی mega-menu کلیک شد
+
+    $('.mega-menu').on('click', function (e) {
+      e.preventDefault();
+      var $ul = $(this).siblings('.sub-child').find('ul').first();
+      var id = $ul.data('mobile-id');
+      showMobileSubmenu(id);
+    }); // وقتی آیتمی با زیرمنو کلیک شد (لول بعد)
+
+    $(document).on('click', '.mobile-submenu ul > li.has-sub-menu > a', function (e) {
+      e.preventDefault();
+      var $nextUL = $(this).siblings('ul').first();
+      var id = $nextUL.data('mobile-id');
+      showMobileSubmenu(id);
+    }); // دکمه برگشت
+
+    $(document).on('click', '.back-button', function () {
+      historyStack.pop(); // حذف آخرین
+
+      var prev = historyStack[historyStack.length - 1];
+      $('.mobile-submenu').removeClass('active');
+
+      if (prev !== undefined) {
+        $(".mobile-submenu[data-mobile-id=\"".concat(prev, "\"]")).addClass('active');
       }
     });
-  }); // popup order form
+  } //ثدببا
 
-  $('#confirm-order').click(function () {
-    $('#order-form').fadeIn();
-  });
-  $('.success-modal').click(function (e) {
-    if ($(e.target).is('.added-cart')) {
-      $('#add-cart-success').fadeOut();
-    }
-  });
-  $('.close-popup-form').click(function () {
-    if ($('#order-form').length > 0) {
-      $('.cart-modal').fadeOut();
-    } else if ($('#add-cart-success').length > 0) {
-      $('#add-cart-success').fadeOut();
-    } // $('#order-form').fadeOut();
-
-  }); // payment method
-
-  $('input[name="payment"]').on('change', function () {
-    var value = $(this).val();
-
-    if (value === 'deposit') {
-      paymentMethod($('input[name="payment-method"]:checked').val());
-      $('#payment-method').slideDown(300);
-    } else {
-      paymentMethod(1);
-      $('#payment-method').slideUp(300);
-    }
-  });
-  $('#meterage').on('change', function () {
-    $('.meterage-value').val($('#meterage').val());
-    finalPrice();
-  });
-  $('input[name="payment-method"]').on('change', function () {
-    var percent = $(this).val();
-    paymentMethod(percent);
-  });
-
-  function paymentMethod(percent) {
-    var cost = $('input[name="shipping"]:checked').data('cost');
-    var total = getCookie('cartTotal');
-    var tax = total * 0.1;
-
-    var _final = total + tax + cost;
-
-    if ($('#total-price').length > 0) {
-      $('#shipping-cost').html(cost ? Number(cost).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>' : 'رایگان');
-      $('#total-price').html(Number(total).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-      $('#tax-amount').html(Number(tax).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-      $('#final-price').html(Number(_final * percent).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-      $('#deposit-desc').html(' پرداخت ' + percent * 100 + '% مبلغ کل');
-    }
-  }
-
-  function finalPrice() {
-    var price = $('#pr-price').val() * $('#meterage').val();
-    $('.finalPrice').html(Number(price).toLocaleString() + ' <svg class="toman"><use href="#toman"/></svg> ');
-  } // shipping method
-
-
-  $('input[name="shipping"]').on('change', function () {
-    if ($('#quickly').is(':checked')) {
-      $('.shipping-notice').text('( در تحویل فوری ارسال بصورت فوری می‌باشد ولی در صورت نبود برش مناسب 24 ساعت زمان اضافه می گردد. )');
-    } else if ($('#normal').is(':checked')) {
-      $('.shipping-notice').text('( در تحویل عادی ارسال برش مناسب ۷ الی ۱۰ روز زمان می‌برد. )');
-    }
-  }); // change meter order in cart
-
-  function billAmount(e) {
-    var $productLi = e.closest('li');
-    var productId = $productLi.data('product-id');
-    var totalRowPrice = $productLi.find('.total-price-order');
-    var input = $productLi.find('.qty-input');
-    var cart = getCookie('shoppingCart');
-    var $amount = input.val();
-    cart.forEach(function (item) {
-      if (String(item.id) === String(productId)) {
-        item.amount = Number($amount);
-        totalRowPrice.html(Number(item.amount * item.price).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-      }
-    });
-    setCookie('shoppingCart', cart, 7);
-    updateTotal(cart, true);
-  } // shop cart
-
-
-  function setCookie(name, value, days) {
-    var d = new Date();
-    d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-    var expires = "expires=" + d.toUTCString();
-    document.cookie = name + "=" + JSON.stringify(value) + ";" + expires + ";path=/";
-  }
-
-  function getCookie(name) {
-    var cookies = document.cookie.split("; ");
-
-    for (var i = 0; i < cookies.length; i++) {
-      var parts = cookies[i].split("=");
-
-      if (parts[0] === name) {
-        return JSON.parse(parts[1]);
-      }
-    }
-
-    return [];
-  }
-
-  function add_to_card(product, fadeIn) {
-    var cart = getCookie('shoppingCart'); // cart.push(product);
-
-    var productIndex = cart.findIndex(function (item) {
-      return String(item.id) === String(product.id);
-    });
-
-    if (productIndex !== -1) {
-      cart[productIndex].amount = product.amount;
-      cart[productIndex].price = product.price;
-    } else {
-      cart.push(product);
-    }
-
-    setCookie('shoppingCart', cart, 7);
-    updateTotal(cart);
-
-    if (fadeIn) {
-      $('#add-cart-success').fadeIn();
-    }
-  }
-
-  if ($('.c-shopping-online').length) {
-    var $productDetail = $('.product-detail').find('a');
-    $('.shop-now').on('click', function (e) {
-      var $this = $(this);
-      var $parent = $this.closest('.shop__item');
-      $productDetail.text($parent.find('.product-name').data('name'));
-      document.getElementById('product-name').value = $parent.find('.product-name').data('name');
-      document.getElementById('pr-price').value = $parent.find('.product-price').data('price');
-      document.getElementById('product-id').value = $this.data('id');
-      document.getElementById('page-id').value = $this.data('pageid');
-      $('#add-cart-success').fadeIn();
-    });
-  }
-
-  if ($('#add-to-card').length > 0) {
-    $('#add-to-card').on('click', function (e) {
-      // e.preventDefault();
-      var product;
-
-      if ($('.c-shopping-online').length) {
-        var name = document.getElementById('product-name').value;
-        var price = document.getElementById('pr-price').value;
-        var amount = document.getElementById('meterage').value;
-        var productId = document.getElementById('product-id').value;
-        var pageId = document.getElementById('page-id').value;
-        product = {
-          id: productId,
-          name: name,
-          price: price,
-          amount: amount,
-          pageId: pageId
-        };
-        $('#add-cart-success').fadeOut();
-        add_to_card(product, false);
-      } else {
-        var _name = document.getElementById('product-name').value;
-        var _price = document.getElementById('pr-price').value;
-        var _amount = document.getElementById('meterage').value;
-        var _productId = document.getElementById('product-id').value;
-        var _pageId = document.getElementById('page-id').value;
-        product = {
-          id: _productId,
-          name: _name,
-          price: _price,
-          amount: _amount,
-          pageId: _pageId
-        };
-        add_to_card(product, true);
-      }
-    });
-  }
-
-  function updateTotal(cart) {
-    var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var total = 0;
-    cart.forEach(function (item) {
-      total += parseInt(item.price * item.amount); // اطمینان از عدد بودن
-    });
-    var tax = total * 0.1;
-
-    var _final2 = total + tax;
-
-    if ($('#total-price').length > 0 && update) {
-      $('#total-price').html(Number(total).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-      $('#final-price').html(Number(_final2).toLocaleString() + '<svg class="toman"><use href="#toman"/></svg>');
-    }
-
-    setCookie('cartTotal', total, 7);
-  }
-
-  var existingCart = getCookie('shoppingCart');
-  updateTotal(existingCart); // قیمت محصولات در سینگل محصول
-
-  function updatePrice() {
-    var selectedOption = $('#product-select').find(':selected');
-    var price = selectedOption.data('price');
-
-    if (price) {
-      $('#product-price').html(price + '<svg class="toman"><use href="#toman"></use></svg>');
-    } else {
-      $('#product-price').text('تماس بگیرید');
-    }
-  }
-
-  $('#product-select').on('change', updatePrice);
-  updatePrice();
 
   if ($('.more-text').length > 0) {
     $('.more-text').on('click', function () {

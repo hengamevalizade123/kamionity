@@ -1,0 +1,8 @@
+.c-hero{
+	@include mq($until:sm){
+		img{
+			height: 310px;
+			object-fit: cover;
+		}
+	}
+}

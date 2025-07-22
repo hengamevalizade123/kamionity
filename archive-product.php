@@ -22,6 +22,20 @@ get_header();
 						</svg>
 
 						محصولات</h1>
+					<?php
+					$total_pages = $latest_posts->max_num_pages;
+
+					if ($total_pages > 1) {
+						echo '<div class="pagination">';
+						echo paginate_links(array(
+							'current' => max(1, get_query_var('paged')),
+							'total' => $total_pages,
+							'prev_text' => __('« قبلی'),
+							'next_text' => __('بعدی »'),
+						));
+						echo '</div>';
+					}
+					?>
 					<ul class="p-0">
 						<?php
 						$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
@@ -45,27 +59,6 @@ get_header();
 									</a>
 									<div class="c-blog__info">
 										<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-										<p><?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?></p>
-									</div>
-									<div class="c-blog__meta">
-										<p>
-											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<path d="M13.0601 10.94C15.3101 13.19 15.3101 16.83 13.0601 19.07C10.8101 21.31 7.17009 21.32 4.93009 19.07C2.69009 16.82 2.68009 13.18 4.93009 10.94" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-												<path d="M10.59 13.41C8.24996 11.07 8.24996 7.27001 10.59 4.92001C12.93 2.57001 16.73 2.58001 19.08 4.92001C21.43 7.26001 21.42 11.06 19.08 13.41" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-											</svg>
-
-											دسته‌بندی:
-											<?php
-											$terms = get_the_terms(get_the_ID(), 'product_category');
-											if ($terms && !is_wp_error($terms)) {
-												foreach ($terms as $term) {
-													echo '<a href="' . esc_url(get_term_link($term)) . '">' . esc_html($term->name) . '</a> ';
-												}
-											} else {
-												echo 'بدون دسته‌بندی';
-											}
-											?>
-										</p>
 									</div>
 								</li>
 							<?php endwhile;
@@ -74,21 +67,6 @@ get_header();
 							<li>هیچ مطلبی یافت نشد.</li>
 						<?php endif; ?>
 					</ul>
-
-					<?php
-					$total_pages = $latest_posts->max_num_pages;
-
-					if ($total_pages > 1) {
-						echo '<div class="pagination">';
-						echo paginate_links(array(
-							'current' => max(1, get_query_var('paged')),
-							'total' => $total_pages,
-							'prev_text' => __('« قبلی'),
-							'next_text' => __('بعدی »'),
-						));
-						echo '</div>';
-					}
-					?>
 				</div>
 			</div>
 		</div>

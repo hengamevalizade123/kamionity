@@ -1,5 +1,8 @@
 .c-home-about {
 	gap: 24px;
+	@include mq($until:md){
+		flex-direction: column;
+	}
 	&__img {
 		img {
 			height: 250px;

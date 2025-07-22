@@ -746,204 +746,6 @@ function my_ajax_scripts()
 }
 
 add_action('wp_enqueue_scripts', 'my_ajax_scripts');
-// shop post type
-function register_shop_post_type()
-{
-	$labels = array(
-		'name' => 'فروشگاه شهرپانل',
-		'singular_name' => 'فروشگاه شهرپانل',
-		'menu_name' => 'فروشگاه شهرپانل',
-		'name_admin_bar' => 'محصول',
-		'add_new' => 'افزودن محصول جدید',
-		'add_new_item' => 'افزودن محصول جدید',
-		'new_item' => 'محصول جدید',
-		'edit_item' => 'ویرایش محصول',
-		'view_item' => 'مشاهده محصول',
-		'all_items' => 'همه محصولات',
-		'search_items' => 'جستجوی محصول',
-		'not_found' => 'محصولی پیدا نشد',
-		'not_found_in_trash' => 'محصولی در زباله‌دان یافت نشد',
-	);
-
-	$args = array(
-		'labels' => $labels,
-		'public' => true,
-		'menu_icon' => 'dashicons-store',
-		'menu_position' => 5,
-		'supports' => array('title', 'editor', 'thumbnail', 'page-attributes'),
-		'has_archive' => true,
-		'rewrite' => array('slug' => 'mammut-construction/shop'),
-		'show_in_rest' => true, // برای گوتنبرگ و API
-	);
-
-	register_post_type('shop', $args);
-}
-
-add_action('init', 'register_shop_post_type');
-
-//add orders in database - shop
-function handle_custom_checkout_form()
-{
-	if (isset($_POST['submit_request'])) {
-
-		global $wpdb;
-		$table = $wpdb->prefix . 'customer_orders';
-		$data = [
-			'user_info' => json_encode($_POST['user_info'], JSON_UNESCAPED_UNICODE),
-			'order_info' => stripslashes($_COOKIE['shoppingCart']),
-			'created_at' => current_time('mysql'),
-			'tracking_code' => $_POST['trackingCode']
-		];
-		$mobile = $_POST['user_info']['phone_number'];
-		$wpdb->insert($table, $data);
-
-		ini_set("soap.wsdl_cache_enabled", "0");
-		$sms = new SoapClient("http://api.payamak-panel.com/post/Send.asmx?wsdl", array("encoding" => "UTF-8"));
-		$data = [
-			"username" => "989014515051",
-			"password" => "gBc2q%-=",
-			"text" => [$_POST['trackingCode']],
-			"to" => $mobile,
-			"bodyId" => 325595,
-		];
-		$send_Result = $sms->SendByBaseNumber($data)->SendByBaseNumberResult;
-
-		$data_admin = [
-			"username" => "989014515051",
-			"password" => "gBc2q%-=",
-			"from"     => "50004001515051",
-			"to"       => "989014515051",
-			"text"     => "شهرپانل، سفارش جدید ثبت شد.",
-			'isflash'  => false
-		];
-		$sms->SendSimpleSMS2($data_admin);
-
-		// ======== send email ========
-		$recipients = [
-			'mammut.mehrsa@gmail.com',
-			'mehrshdad.khanbabaie@gmail.com',
-			'hengamevalizade@gmail.com'
-		];
-
-		$subject = "سفارش جدید در شهرپانل";
-
-		ob_start();
-		$user_info = $_POST['user_info'];
-		$order_data = json_decode(stripslashes($_COOKIE['shoppingCart']), true);
-		$tracking_code = $_POST['trackingCode'];
-		include get_template_directory() . '/email-templates/order-notification.php';
-		$body = ob_get_clean();
-
-		$headers = ['Content-Type: text/html; charset=UTF-8', 'From: شهرپانل <info@shahrpanel.com>'];
-
-		foreach ($recipients as $email) {
-			wp_mail($email, $subject, $body, $headers);
-		}
-
-		echo $send_Result;
-		exit;
-	}
-}
-
-add_action('init', 'handle_custom_checkout_form');
-add_action('wp_ajax_handle_custom_checkout_form', 'handle_custom_checkout_form');
-add_action('wp_ajax_nopriv_handle_custom_checkout_form', 'handle_custom_checkout_form');
-
-
-
-function get_product_data($id = false)
-{
-	$products = get_transient('cached_product_data');
-	if ($products === false) {
-		$url = "https://shahrpanel.com/api/API.php/price";
-		$response = wp_remote_post($url, ['timeout' => 15]);
-
-		if (is_wp_error($response)) {
-			return 'خطا در ارتباط با API';
-		}
-
-		$body = wp_remote_retrieve_body($response);
-		$data = json_decode($body, true);
-
-		if (json_last_error() !== JSON_ERROR_NONE) {
-			return 'فرمت JSON معتبر نیست';
-		}
-
-		$products = [];
-		foreach ($data['data'] as $items) {
-			foreach ($items["products"] as $item) {
-				$products[$item['id']] = $item;
-			}
-		}
-		set_transient('cached_product_data', $products, 10 * MINUTE_IN_SECONDS);
-	}
-
-	if ($id) {
-		return $products[$id] ?? null;
-	}
-
-	return $products;
-}
-
-function get_group_and_products_data()
-{
-	$grouped_products = get_transient('cached_grouped_product_data');
-	if ($grouped_products === false) {
-		$url = "https://shahrpanel.com/api/API.php/price";
-		$response = wp_remote_post($url, ['timeout' => 15]);
-
-		if (is_wp_error($response)) {
-			return 'خطا در ارتباط با API';
-		}
-
-		$body = wp_remote_retrieve_body($response);
-		$data = json_decode($body, true);
-
-		if (json_last_error() !== JSON_ERROR_NONE) {
-			return 'فرمت JSON معتبر نیست';
-		}
-
-		$products = [];
-		foreach ($data['data'] as $items) {
-			foreach ($items["products"] as $item) {
-				$products[] = $item;
-			}
-		}
-
-		$grouped_products = [];
-		foreach ($products as $product) {
-			if (stripos($product['title'], 'سقفی') !== false) {
-				$grouped_products['roof'][] = $product;
-			} elseif (stripos($product['title'], 'دیواری') !== false) {
-				$grouped_products['wall'][] = $product;
-			} else {
-				$grouped_products['else'][] = $product;
-			}
-		}
-
-		set_transient('cached_grouped_product_data', $grouped_products, 10 * MINUTE_IN_SECONDS);
-	}
-
-	return $grouped_products;
-}
-
-function generateTrackingCode()
-{
-	global $wpdb;
-	$table = $wpdb->prefix . 'customer_orders';
-
-	do {
-		$prefix = 'ORD';
-		$random = rand(10000, 99999);
-		$code = $prefix . '-' . $random;
-
-		$exists = $wpdb->get_var(
-			$wpdb->prepare("SELECT COUNT(*) FROM $table WHERE tracking_code = %s", $code)
-		);
-	} while ($exists > 0);
-
-	return $code;
-}
 
 function add_schema_to_specific_template() {
 	if ( is_page() && get_page_template_slug( get_queried_object_id() ) === 'page-templates/company.php' ) {
@@ -985,7 +787,7 @@ add_action('wp_enqueue_scripts', 'move_jquery_to_footer');
 function register_custom_post_type_products() {
 
 	// Register taxonomy: دسته‌بندی محصولات
-	register_taxonomy('product_category', ['product'], [
+	register_taxonomy('car', ['product'], [
 		'labels' => [
 			'name'              => 'دسته‌بندی محصولات',
 			'singular_name'     => 'دسته‌بندی محصول',
@@ -1003,7 +805,7 @@ function register_custom_post_type_products() {
 		'public'            => true,
 		'show_ui'           => true,
 		'show_admin_column' => true,
-		'rewrite'           => ['slug' => 'product-category'],
+		'rewrite'           => ['slug' => 'car'],
 		'show_in_rest'      => true,
 	]);
 
@@ -1028,9 +830,82 @@ function register_custom_post_type_products() {
 		'has_archive'         => true,
 		'rewrite'             => ['slug' => 'products'],
 		'supports'            => ['title', 'editor', 'thumbnail', 'excerpt'],
-		'taxonomies'          => ['product_category'],
+		'taxonomies'          => ['car'],
 		'show_in_rest'        => true,
 		'menu_icon'           => 'dashicons-cart',
 	]);
 }
 add_action('init', 'register_custom_post_type_products');
+
+//menu sub level
+class Custom_Walker_Category_Menu extends Walker_Category {
+
+	// شروع سطح جدید (زیرمنو)
+	function start_lvl( &$output, $depth = 0, $args = array() ) {
+		$level = $depth + 1;
+		$output .= '<ul class="sub-menu lvl-' . $level . '">';
+	}
+
+	// پایان سطح
+	function end_lvl( &$output, $depth = 0, $args = array() ) {
+		$output .= '</ul>';
+	}
+
+	// شروع هر آیتم (دسته)
+	function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
+		$cat_name = esc_html($category->name);
+		$cat_url  = esc_url(get_term_link($category));
+
+		$children = get_term_children($category->term_id, $category->taxonomy);
+		$has_children = !empty($children);
+
+		$classes = array();
+
+		if ($has_children) {
+			$classes[] = 'has-sub-menu';
+		}
+		if ($depth === 1) {
+			static $first_li_per_lvl1_parent = array();
+
+			$parent_id = $category->parent;
+
+			if (!isset($first_li_per_lvl1_parent[$parent_id])) {
+				$classes = array_merge($classes, ['child-lvl1', 'has-sub-menu']);
+
+				$first_li_per_lvl1_parent[$parent_id] = true;
+			}
+		}
+
+		$class_str = $classes ? ' class="has-sub-menu ' . implode(' ', $classes) . '"' : ' class="has-sub-menu"';
+		$output .= "<li$class_str><a href=\"$cat_url\">$cat_name</a>";
+
+		if (!$has_children) {
+			$products = get_posts(array(
+				'post_type'      => 'product',
+				'posts_per_page' => 5,
+				'suppress_filters' => false,
+				'tax_query'      => array(
+					array(
+						'taxonomy' => 'car',
+						'field'    => 'term_id',
+						'terms'    => $category->term_id,
+						'include_children' => false,
+					),
+				),
+			));
+
+
+			if (!empty($products)) {
+				$output .= '<ul class="product-list">';
+				foreach ($products as $product) {
+					$output .= '<li><a href="' . get_permalink($product->ID) . '">' . get_the_title($product->ID) . '</a></li>';
+				}
+//				echo $output;
+				$output .= '</ul>';
+			}
+		}
+	}
+	function end_el( &$output, $category, $depth = 0, $args = array() ) {
+		$output .= '</li>';
+	}
+}

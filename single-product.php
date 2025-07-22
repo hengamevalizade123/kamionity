@@ -16,7 +16,7 @@ get_header();
 				<div class="c-breadcrumbs">
 					<?php if (function_exists('rank_math_the_breadcrumbs')) rank_math_the_breadcrumbs(); ?>
 				</div>
-				<div class="c-page d-flex gap-md">
+				<div class="c-page d-flex gap-md c-content-main">
 					<section class="c-page__main post-content-main">
 						<?php
 						while (have_posts()) :

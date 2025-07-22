@@ -76,7 +76,7 @@
 			</div>
 			<?php
 			$terms = get_terms(array(
-				'taxonomy' => 'product_category',
+				'taxonomy' => 'car',
 				'hide_empty' => true,
 			));
 

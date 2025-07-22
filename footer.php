@@ -93,29 +93,6 @@
 					   name="s">
 			</label>
 		</form>
-		<div class="c-suggest">
-			<ul>
-				<li>
-					<a href="#">تولیدکنندگان پانل</a>
-				</li>
-				<li>
-					<a href="#">راهنمای خرید</a>
-				</li>
-				<li>
-					<a href="#">محاسبه متراژ ساندویچ پانل</a>
-				</li>
-				<li>
-					<a href="#">ساندویچ پانل</a>
-				</li>
-				<li>
-					<a href="#">ساندویچ پانل دیواری</a>
-				</li>
-				<li>
-					<a href="#">ساندویچ پانل سقفی</a>
-				</li>
-			</ul>
-
-		</div>
 		<div id="search-results"></div>
 	</div>
 </div>

@@ -8,8 +8,10 @@
 	padding: 16px;
 	background: var(--color-white);
 }
-.c-breadcrumbs{
-	margin-bottom: 24px;
+.c-content-main{
+	@include mq($until: md) {
+		flex-direction: column;
+	}
 }
 .rank-math-breadcrumb {
 	font-weight: 300;
@@ -76,6 +78,9 @@
 
 	aside {
 		flex: 1;
+		@include mq($from:md,$until:desktop){
+			flex: 1.5;
+		}
 	}
 }
 
@@ -721,4 +726,8 @@ table:not(.c-page__table.js-tabs table) tr {
 	justify-content: center;
 	@include font-size(22px, 1.6);
 	font-weight: 400;
+}
+.category-description{
+	@include font-size(16px,1.8);
+	border-radius: $border-radius;
 }

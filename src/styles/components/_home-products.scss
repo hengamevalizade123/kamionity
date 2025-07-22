@@ -4,6 +4,12 @@
 		article{
 			margin-left: 24px;
 			width: calc(33.33% - 16px);
+			@include mq($from:sm,$until:md){
+				width: calc(50% - 12px);
+			}
+			@include mq($until:sm){
+				width: 100%;
+			}
 			img{
 				height: auto;
 				width: 100%;
